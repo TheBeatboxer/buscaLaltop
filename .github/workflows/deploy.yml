@@ -1,0 +1,37 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Upload files to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }} # Define la IP pública de tu EC2 en GitHub Secrets
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} # Define tu clave privada SSH en GitHub Secrets
+        run: |
+          sudo apt-get install -y rsync
+          echo "$SSH_PRIVATE_KEY" > private_key
+          chmod 600 private_key
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i private_key" . ec2-user@$EC2_HOST:/home/ec2-user/laptop-crud
+          
+      - name: Restart Application on EC2
+        run: |
+          ssh -i private_key -o StrictHostKeyChecking=no ec2-user@$EC2_HOST << 'EOF'
+          cd /home/ec2-user/laptop-crud
+          npm install
+          pm2 restart all || pm2 start server.js --name laptop-app
+          EOF

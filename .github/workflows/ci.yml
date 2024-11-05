@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      # Ejecuta el comando build (opcional)
+      - name: Build
+        run: npm run build
+
+      # Opcional: Puedes desactivar los tests si aún no tienes pruebas implementadas
+      - name: Skip tests (no tests specified)
+        run: echo "No tests specified"

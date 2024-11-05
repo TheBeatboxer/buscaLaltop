@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptop CRUD</title>
+</head>
+<body>
+    <h1>CRUD de Laptops</h1>
+    <form id="laptopForm">
+        <input type="text" id="brand" placeholder="Marca" required>
+        <input type="text" id="model" placeholder="Modelo" required>
+        <input type="number" id="price" placeholder="Precio" required>
+        <select id="status">
+            <option value="available">Disponible</option>
+            <option value="sold">Vendido</option>
+            <option value="pending">Pendiente</option>
+        </select>
+        <button type="submit">Agregar Laptop</button>
+    </form>
+    <ul id="laptopList"></ul>
+    <script src="app.js"></script>
+</body>
+</html>
